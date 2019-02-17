@@ -2,16 +2,16 @@
   <div class="container">
     <div v-if="!open" v-on:click.stop="open = !open">{{displayText()}}</div>
     <div v-else>
-      <input type="text" v-model="searchText" v-on:keyup.stop="search">
+      <input type="text" v-model="searchText">
       <div class="select-all">
         <img v-bind:src="checkedUncheckedImageUrl(selectedAll)" v-on:click.stop="selectAll" />
         <span>Select All</span>
       </div>
-      <div class="no-results" v-show="displayedOptions.length === 0">
+      <div class="no-results" v-show="filtered().length === 0">
         No results found for: <span class="no-results-searchtext">{{searchText}}</span>
       </div>
       <div class="option-container">
-        <div v-for="displayedOption in displayedOptions" v-bind:key="displayedOption.id" class="option">
+        <div v-for="displayedOption in filtered()" v-bind:key="displayedOption.id" class="option">
           <img v-bind:src="checkedUncheckedImageUrl(displayedOption.selected)" 
             v-on:click.stop="checkboxClicked(displayedOption)" />
           <span>{{displayedOption.name}}</span>
@@ -28,7 +28,7 @@ import imageUnChecked from "../assets/checkbox_unchecked.png"
 export default {
   name: 'VueMultiselect',
   props: {
-    options: []
+    options: Array
   },
   data: function() {
     return {
@@ -47,13 +47,12 @@ export default {
     window.removeEventListener('keyup', this.close);
   },
   methods: {
-    search: function() {
+    filtered: function() {
       if (this.searchText !== "") {
-        this.displayedOptions = 
-          this.displayedOptions.filter(d => d.name.toLowerCase().includes(this.searchText.toLowerCase()));
+        return this.displayedOptions.filter(d => d.name.toLowerCase().includes(this.searchText.toLowerCase()));
       }
       else {
-        this.displayedOptions = this.options.slice(0);
+        return this.displayedOptions;
       }
     },
     checkedUncheckedImageUrl: function(selected) {
@@ -69,7 +68,7 @@ export default {
     },
     selectAll: function() {
       this.selectedAll = !this.selectedAll;
-      this.displayedOptions.map(d => d.selected = this.selectedAll);
+      this.filtered().map(d => d.selected = this.selectedAll);
     },
     displayText: function() {
       let selected = this.displayedOptions.filter(d => d.selected).map(d => d.name);
