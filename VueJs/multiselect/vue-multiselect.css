@@ -1,0 +1,30 @@
+.container {
+	max-width: 200px;
+	border: solid 1px black;
+	padding: 5px;
+}
+
+.option {
+	padding: 5px;
+}
+
+.option > img {
+	margin-right: 5px;
+}
+
+.select-all {
+	padding: 5px;
+	border-bottom: solid 1px;
+}
+
+.select-all > img {
+	margin-right: 5px;
+}
+
+.no-results {
+	padding: 5px;
+}
+
+.no-results-searchtext {
+	font-style: italic;
+}
